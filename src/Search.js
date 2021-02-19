@@ -11,14 +11,19 @@ class Search extends Component{
     }
    
     findWord(){
-        let { issues, issuesFound } = this.state;
-        let word = this.getTitle.value;
-        issuesFound = [];
+        let { issues } = this.state;
+        let word = this.getTitle.value.toLowerCase();
+        let results = [];
         issues.map(function (issue) {
-            if(issue.title.includes(word))
-                issuesFound.push(issue);
-        })
-        console.log(issuesFound);
+            if(issue.title.toLowerCase().includes(word))
+            results.push(issue);
+        });
+        this.setState (state => {
+            const issuesFound = (results);
+            return {
+                issuesFound
+            }
+        });
     }
     
     componentDidMount(){
@@ -36,7 +41,7 @@ class Search extends Component{
     
 
     render() {
-        const { isLoaded, issues, issuesFound } = this.state;
+        let { isLoaded, issues, issuesFound } = this.state;
         if(!isLoaded)
             return (<div>loading..</div>) 
         else
@@ -44,15 +49,13 @@ class Search extends Component{
                 <div>
                     <input type="text" ref={(input) => (this.getTitle = input)}/>
                     <button onClick={(e) => this.findWord()}>Search</button>
-                    
-                    {
-                        issuesFound.map(function (issue) {
+                    <p>{!issuesFound ? issuesFound[0].title : ""}</p>
+                    {issuesFound.map(function (issue) {
                             return(
-                            <p>{issue.title}</p>
+                                <p key={issue.id}>{issue.title}</p>
                             )
-                            //console.log(issue.title);
-                        })
-                    }
+                        })}
+                        
                 </div>
             );  
     }
